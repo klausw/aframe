@@ -81899,7 +81899,7 @@ _dereq_('./core/a-mixin');
 _dereq_('./extras/components/');
 _dereq_('./extras/primitives/');
 
-console.log('A-Frame Version: 1.0.4 (Date 2020-03-14, Commit #69c1a3f1)');
+console.log('A-Frame Version: 1.0.4 (Date 2020-03-14, Commit #28f0f5fb)');
 console.log('THREE Version (https://github.com/supermedium/three.js):',
             pkg.dependencies['super-three']);
 console.log('WebVR Polyfill Version:', pkg.dependencies['webvr-polyfill']);
@@ -83501,7 +83501,7 @@ module.exports.System = registerSystem('renderer', {
     colorManagement: {default: false},
     gammaOutput: {default: false},
     alpha: {default: true},
-    foveationLevel: {default: 0},
+    foveationLevel: {default: 0}
   },
 
   init: function () {
@@ -83701,16 +83701,9 @@ module.exports.System = registerSystem('tracked-controls-webxr', {
       self.referenceSpace = referenceSpace;
     }).catch(function(err) {
       console.warn('Failed to get reference space "' + refspace + '": ' + err);
-      var xrInit = self.el.sceneEl.systems.webxr.sessionConfiguration;
-      // Check if the reference space is available by default, or if it
-      // was requested as an optional or required feature.
-      var isAvailable = refspace == 'viewer' || refspace == 'local' ||
-          xrInit.requiredFeatures.includes(refspace) ||
-          xrInit.optionalFeatures.includes(refspace);
-      if (!isAvailable) {
-        console.warn('Reference space "' + refspace + '" must be requested ' +
-                     'in a-scene.webxr.requiredFeatures/optionalFeatures.');
-      }
+      self.el.sceneEl.systems.webxr.warnIfFeatureNotRequested(
+          refspace,
+          "tracked-controls-webxr uses reference space '" + refspace + "'.");
     });
   },
 
@@ -83744,6 +83737,7 @@ module.exports.System = registerSystem('webxr', {
     optionalFeatures: {type: 'array', default: ['bounded-floor']},
     overlayElement: {type: 'selector'}
   },
+
   update: function () {
     var data =  this.data;
     this.sessionConfiguration = {
@@ -83752,7 +83746,29 @@ module.exports.System = registerSystem('webxr', {
     }
 
     if (data.overlayElement) {
+      this.warnIfFeatureNotRequested('dom-overlay');
       this.sessionConfiguration.domOverlay = {root: data.overlayElement};
+    }
+  },
+
+  wasFeatureRequested: function (feature) {
+    // Features available by default for immersive sessions don't need to
+    // be requested explicitly.
+    if (feature == 'viewer' || feature == 'local') return true;
+
+    if (this.sessionConfiguration.requiredFeatures.includes(feature) ||
+        this.sessionConfiguration.requiredFeatures.includes(feature)) {
+      return true;
+    }
+
+    return false;
+  },
+
+  warnIfFeatureNotRequested: function (feature, opt_intro) {
+    if (!this.wasFeatureRequested(feature)) {
+      var msg = "Please add the feature '" + feature + "' to a-scene's " +
+          "webxr system options in requiredFeatures/optionalFeatures";
+      console.warn((opt_intro ? opt_intro + ' ' : '') + msg);
     }
   }
 });
