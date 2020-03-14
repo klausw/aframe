@@ -81899,7 +81899,7 @@ _dereq_('./core/a-mixin');
 _dereq_('./extras/components/');
 _dereq_('./extras/primitives/');
 
-console.log('A-Frame Version: 1.0.4 (Date 2020-03-13, Commit #69c1a3f1)');
+console.log('A-Frame Version: 1.0.4 (Date 2020-03-14, Commit #69c1a3f1)');
 console.log('THREE Version (https://github.com/supermedium/three.js):',
             pkg.dependencies['super-three']);
 console.log('WebVR Polyfill Version:', pkg.dependencies['webvr-polyfill']);
@@ -83701,7 +83701,7 @@ module.exports.System = registerSystem('tracked-controls-webxr', {
       self.referenceSpace = referenceSpace;
     }).catch(function(err) {
       console.warn('Failed to get reference space "' + refspace + '": ' + err);
-      var xrInit = this.sceneEl.systems.webxr.sessionConfiguration;
+      var xrInit = this.el.sceneEl.systems.webxr.sessionConfiguration;
       // Check if the reference space is available by default, or if it
       // was requested as an optional or required feature.
       var isAvailable = refspace == 'viewer' || refspace == 'local' ||
