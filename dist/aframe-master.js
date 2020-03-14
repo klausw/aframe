@@ -83701,7 +83701,7 @@ module.exports.System = registerSystem('tracked-controls-webxr', {
       self.referenceSpace = referenceSpace;
     }).catch(function(err) {
       console.warn('Failed to get reference space "' + refspace + '": ' + err);
-      var xrInit = this.el.sceneEl.systems.webxr.sessionConfiguration;
+      var xrInit = self.el.sceneEl.systems.webxr.sessionConfiguration;
       // Check if the reference space is available by default, or if it
       // was requested as an optional or required feature.
       var isAvailable = refspace == 'viewer' || refspace == 'local' ||
