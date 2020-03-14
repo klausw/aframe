@@ -81899,7 +81899,7 @@ _dereq_('./core/a-mixin');
 _dereq_('./extras/components/');
 _dereq_('./extras/primitives/');
 
-console.log('A-Frame Version: 1.0.4 (Date 2020-03-14, Commit #28f0f5fb)');
+console.log('A-Frame Version: 1.0.4 (Date 2020-03-14, Commit #52c1b31d)');
 console.log('THREE Version (https://github.com/supermedium/three.js):',
             pkg.dependencies['super-three']);
 console.log('WebVR Polyfill Version:', pkg.dependencies['webvr-polyfill']);
@@ -83699,11 +83699,11 @@ module.exports.System = registerSystem('tracked-controls-webxr', {
     var refspace = 'local-floor';
     xrSession.requestReferenceSpace(refspace).then(function (referenceSpace) {
       self.referenceSpace = referenceSpace;
-    }).catch(function(err) {
+    }).catch(function (err) {
       console.warn('Failed to get reference space "' + refspace + '": ' + err);
       self.el.sceneEl.systems.webxr.warnIfFeatureNotRequested(
           refspace,
-          "tracked-controls-webxr uses reference space '" + refspace + "'.");
+          'tracked-controls-webxr uses reference space "' + refspace + '".');
     });
   },
 
@@ -83739,11 +83739,11 @@ module.exports.System = registerSystem('webxr', {
   },
 
   update: function () {
-    var data =  this.data;
+    var data = this.data;
     this.sessionConfiguration = {
       requiredFeatures: data.requiredFeatures,
       optionalFeatures: data.optionalFeatures
-    }
+    };
 
     if (data.overlayElement) {
       this.warnIfFeatureNotRequested('dom-overlay');
@@ -83754,7 +83754,7 @@ module.exports.System = registerSystem('webxr', {
   wasFeatureRequested: function (feature) {
     // Features available by default for immersive sessions don't need to
     // be requested explicitly.
-    if (feature == 'viewer' || feature == 'local') return true;
+    if (feature === 'viewer' || feature === 'local') return true;
 
     if (this.sessionConfiguration.requiredFeatures.includes(feature) ||
         this.sessionConfiguration.requiredFeatures.includes(feature)) {
@@ -83764,11 +83764,11 @@ module.exports.System = registerSystem('webxr', {
     return false;
   },
 
-  warnIfFeatureNotRequested: function (feature, opt_intro) {
+  warnIfFeatureNotRequested: function (feature, optIntro) {
     if (!this.wasFeatureRequested(feature)) {
-      var msg = "Please add the feature '" + feature + "' to a-scene's " +
-          "webxr system options in requiredFeatures/optionalFeatures";
-      console.warn((opt_intro ? opt_intro + ' ' : '') + msg);
+      var msg = 'Please add the feature "' + feature + '" to a-scene\'s ' +
+          'webxr system options in requiredFeatures/optionalFeatures.';
+      console.warn((optIntro ? optIntro + ' ' : '') + msg);
     }
   }
 });
