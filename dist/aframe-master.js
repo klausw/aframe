@@ -83709,7 +83709,7 @@ module.exports.System = registerSystem('tracked-controls-webxr', {
           xrInit.optionalFeatures.includes(refspace);
       if (!isAvailable) {
         console.warn('Reference space "' + refspace + '" must be requested ' +
-                     ' in a-scene.webxr.requiredFeatures or optionalFeatures.');
+                     'in a-scene.webxr.requiredFeatures/optionalFeatures.');
       }
     });
   },
