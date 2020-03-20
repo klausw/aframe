@@ -79470,6 +79470,8 @@ module.exports.AScene = registerElement('a-scene', {
             if (this.xrSession) {
               this.xrSession.removeEventListener('end', this.exitVRBound);
             }
+            var refspace = this.sceneEl.systems.webxr.sessionReferenceSpaceType;
+            vrManager.setReferenceSpaceType(refspace);
             var xrMode = useAR ? 'immersive-ar' : 'immersive-vr';
             var xrInit = this.sceneEl.systems.webxr.sessionConfiguration;
             navigator.xr.requestSession(xrMode, xrInit).then(
@@ -81899,7 +81901,7 @@ _dereq_('./core/a-mixin');
 _dereq_('./extras/components/');
 _dereq_('./extras/primitives/');
 
-console.log('A-Frame Version: 1.0.4 (Date 2020-03-14, Commit #52c1b31d)');
+console.log('A-Frame Version: 1.0.4 (Date 2020-03-20, Commit #c247ae20)');
 console.log('THREE Version (https://github.com/supermedium/three.js):',
             pkg.dependencies['super-three']);
 console.log('WebVR Polyfill Version:', pkg.dependencies['webvr-polyfill']);
@@ -83696,7 +83698,7 @@ module.exports.System = registerSystem('tracked-controls-webxr', {
       }
       return;
     }
-    var refspace = 'local-floor';
+    var refspace = self.el.sceneEl.systems.webxr.sessionReferenceSpaceType;
     xrSession.requestReferenceSpace(refspace).then(function (referenceSpace) {
       self.referenceSpace = referenceSpace;
     }).catch(function (err) {
@@ -83733,6 +83735,7 @@ var registerSystem = _dereq_('../core/system').registerSystem;
  */
 module.exports.System = registerSystem('webxr', {
   schema: {
+    referenceSpaceType: {type: 'string', default: ['local-floor']},
     requiredFeatures: {type: 'array', default: ['local-floor']},
     optionalFeatures: {type: 'array', default: ['bounded-floor']},
     overlayElement: {type: 'selector'}
@@ -83744,6 +83747,7 @@ module.exports.System = registerSystem('webxr', {
       requiredFeatures: data.requiredFeatures,
       optionalFeatures: data.optionalFeatures
     };
+    this.sessionReferenceSpaceType = data.referenceSpaceType;
 
     if (data.overlayElement) {
       this.warnIfFeatureNotRequested('dom-overlay');
@@ -83757,7 +83761,7 @@ module.exports.System = registerSystem('webxr', {
     if (feature === 'viewer' || feature === 'local') return true;
 
     if (this.sessionConfiguration.requiredFeatures.includes(feature) ||
-        this.sessionConfiguration.requiredFeatures.includes(feature)) {
+        this.sessionConfiguration.optionalFeatures.includes(feature)) {
       return true;
     }
 
